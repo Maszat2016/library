@@ -76,7 +76,7 @@ export class DataAccessLayer {
     private _connection: mysql.Connection;
 
     //connection to the database
-    async initConnection(dbHost: string, dbPort: number) {
+    async initConnection(dbUser:string, dbPassword: string, dbHost: string, dbPort: number) {
         const ConnectionOptions: mysql.ConnectionOptions = {
             host: dbHost,
             port: dbPort,
