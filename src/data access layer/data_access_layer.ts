@@ -4,11 +4,16 @@ import * as mysql from 'mysql2/promise'
 export type Book = {
     book_id: number,
     title: string,
+    authors: string,
+    editor: string,
     publisher: string,
     publishing_date: Date,
     isbn: string,
     page_count: number,
-    place_id: number,
+    house: string,
+    room: string,
+    bookcase: number,
+    shelf: number,
     comment: string;
 };
 
@@ -251,9 +256,10 @@ export class DataAccessLayer {
             const sql : string = `
                 INSERT INTO library.authors (name)
                 VALUES(?)
+                ON DUPLICATE KEY UPDATE name = ?;
             `;
 
-            await this._connection.query(sql,[name]);
+            await this._connection.query(sql,[name, name]);
         }
         catch(e){
             console.log(e);
@@ -413,7 +419,101 @@ export class DataAccessLayer {
         return places;
     }
 
+    async addPlace(house: string, room: string, bookcase: number, shelf: number){
+        try{
+            const sql : string = `
+                INSERT INTO library.Places (house, room, bookcase, shelf)
+                SELECT * FROM (SELECT ?, ?, ?, ?) AS tmp
+                WHERE NOT EXISTS (
+                    SELECT 1 
+                    FROM Places 
+                    WHERE house = ? AND room = ? AND bookcase = ? AND shelf = ?
+                );
+            `
+
+            await this._connection.query(sql,[house, room, bookcase, shelf, house, room, bookcase, shelf]);
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    async getPlaceId(house: string, room: string, bookcase: number, shelf: number):Promise<number | null> {
+        try{
+            const sql : string = `
+                SELECT place_id 
+                FROM Places 
+                WHERE house = ? AND room = ? AND bookcase = ? AND shelf = ?;
+            `;
+
+            const [rows, fields] =  await this._connection.query<mysql.RowDataPacket[]>(sql,[house, room, bookcase, shelf]);
+
+            if(rows.length == 0){
+                return null;
+            }
+            else{
+                let row = rows[0];
+                let place_id = row.place_id;
+                return place_id;
+            }
+        }
+        catch(e){
+            console.log(e);
+            return null;
+        }
+    }
+
     //Books
+
+    async getAllBooks(){
+        const books: Book[] = [];
+
+        const sql: string = `
+            SELECT
+                b.title,
+                GROUP_CONCAT(DISTINCT a.name SEPARATOR ', ') AS authors,
+                e.name AS editor,
+                b.publisher,
+                b.publishing_date,
+                b.isbn,
+                b.page_count,
+                p.house,
+                p.room,
+                p.bookcase,
+                p.shelf,
+                b.comment
+            FROM Books b
+            LEFT JOIN BookAuthors ba ON b.book_id = ba.book_id
+            LEFT JOIN Authors a ON ba.author_id = a.author_id
+            LEFT JOIN BookEditors be ON b.book_id = be.book_id
+            LEFT JOIN Editors e ON be.editor_id = e.editor_id
+            LEFT JOIN Places p ON b.place_id = p.place_id
+            group by b.book_id;
+        `
+
+        const [rows, fileds] = await this._connection.query<mysql.RowDataPacket[]>(sql);
+
+        rows.forEach((row) => {
+            let book: Book = {
+                book_id: row.book_id,
+                title: row.title,
+                authors: row.authors,
+                editor: row.editor,
+                publisher: row.publisher,
+                publishing_date: row.publishing_date,
+                isbn: row.isbn,
+                page_count: row.page_count,
+                house: row.house,
+                room: row.room,
+                bookcase: row.bookcase,
+                shelf: row.shelf,
+                comment: row.comment
+            };
+            books.push(book);
+        })
+
+        return books;
+    }
 
     async getAllBooksWithAuthors() {
         const books: BookAuthor[] = [];
@@ -509,7 +609,72 @@ export class DataAccessLayer {
         return books;
     }
 
+    async getBookByID(id: number): Promise<Book | null> {
+        try{
+            const sql: string = `
+                SELECT 
+                    b.title,
+                    GROUP_CONCAT(DISTINCT a.name SEPARATOR ', ') AS authors,
+                    e.name AS editor,
+                    b.publisher,
+                    b.publishing_date,
+                    b.isbn,
+                    b.page_count,
+                    p.house,
+                    p.room,
+                    p.bookcase,
+                    p.shelf,
+                    b.comment
+                FROM Books b
+                LEFT JOIN BookAuthors ba ON b.book_id = ba.book_id
+                LEFT JOIN Authors a ON ba.author_id = a.author_id
+                LEFT JOIN BookEditors be ON b.book_id = be.book_id
+                LEFT JOIN Editors e ON be.editor_id = e.editor_id
+                LEFT JOIN Places p ON b.place_id = p.place_id
+                where b.book_id = ?;
+            `
+
+            const [rows,fields] = await this._connection.query<mysql.RowDataPacket[]>(sql, [id]);
+
+            if(rows.length == 0){
+                return null;
+            }
+            else {
+                let x = rows[0];
+                let book: Book = {
+                    book_id: x.book_id,
+                    title: x.title,
+                    authors: x.authors,
+                    editor: x.editor,
+                    publisher: x.publisher,
+                    publishing_date: x.publishing_date,
+                    isbn: x.isbn,
+                    page_count: x.page_count,
+                    house: x.house,
+                    room: x.room,
+                    bookcase: x.bookcase,
+                    shelf: x.shelf,
+                    comment: x.comment
+                }
+                return book;
+            }
+        }
+        catch(e){
+            console.log(e);
+            return null;
+        }
+    }
+
+    async addBook(title: string, authors: string[], editor: string, publisher: string, publishing_date: Date, isbn: string,
+                  page_count: number, house: string, room: string, bookcase: number, shelf: number, comment: string) {
+        try{
+            await this.addPlace(house, room, bookcase, shelf);
+            const place_id = await this.getPlaceId(house, room, bookcase, shelf);
 
 
-
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
 }

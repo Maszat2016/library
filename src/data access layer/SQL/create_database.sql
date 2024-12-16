@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS Library.Places (
     place_id INT AUTO_INCREMENT PRIMARY KEY,   -- Unique identifier for each place
     house VARCHAR(255) NOT NULL,               -- House name or identifier
     room VARCHAR(255) NOT NULL,                -- Room name or identifier
-    bookcase VARCHAR(255) NOT NULL,            -- Bookcase name or identifier
-    shelf VARCHAR(255) NOT NULL                -- Shelf name or identifier
+    bookcase INT NOT NULL,            -- Bookcase name or identifier
+    shelf INT NOT NULL                -- Shelf name or identifier
 );
 
 -- Table for storing book details
@@ -27,13 +27,13 @@ CREATE TABLE IF NOT EXISTS  Library.Books (
 -- Table for storing author details
 CREATE TABLE IF NOT EXISTS Library.Authors (
     author_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique identifier for each author
-    name VARCHAR(255) NOT NULL                 -- Author's name
+    name VARCHAR(255) NOT NULL UNIQUE          -- Author's name
 );
 
 -- Table for storing editor details
 CREATE TABLE IF NOT EXISTS Library.Editors (
     editor_id INT AUTO_INCREMENT PRIMARY KEY,  -- Unique identifier for each editor
-    name VARCHAR(255) NOT NULL                 -- Editor's name
+    name VARCHAR(255) NOT NULL UNIQUE          -- Editor's name
 );
 
 -- Join table for books and authors (many-to-many relationship)
