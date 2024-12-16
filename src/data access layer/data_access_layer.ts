@@ -95,7 +95,7 @@ export class DataAccessLayer {
 
         const sql: string = `
             SELECT user_id,username,password,isAdmin
-            FROM Users`
+            FROM Library.Users`
         ;
 
         const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql);
@@ -137,7 +137,7 @@ export class DataAccessLayer {
     async getUserById(id: number) : Promise<User | null>{
         try{
             const sql : string = `
-             SELECT user_id,username,email,password,isAdmin FROM library.users
+             SELECT user_id,username,email,password,isAdmin FROM Library.Users
              WHERE user_id = ?;
            `;
 
@@ -168,7 +168,7 @@ export class DataAccessLayer {
     async updateUser(user : User){
         try{
             const sql : string = `
-            UPDATE library.users SET
+            UPDATE Library.Users SET
                 username = ?,
                 password = ?,
                 isAdmin = ?
@@ -186,7 +186,7 @@ export class DataAccessLayer {
     async deleteUser(id : number){
         try{
             const sql : string = `
-            DELETE FROM travel_agency.users
+            DELETE FROM Library.Users
             WHERE user_id = ?
            `;
 
@@ -205,7 +205,7 @@ export class DataAccessLayer {
 
         const sql: string = `
             SELECT author_id, name
-            FROM library.authors
+            FROM Library.Authors
         `;
 
         const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql);
@@ -226,7 +226,7 @@ export class DataAccessLayer {
         try{
             const sql : string = `
                 SELECT author_id, name
-                FROM library.authors
+                FROM Library.Authors
                 WHERE author_id = ?;
             `
 
@@ -251,10 +251,33 @@ export class DataAccessLayer {
         }
     }
 
+    async getAuthorId(name: string) : Promise<number | null> {
+        try{
+            const sql : string = `
+                SELECT author_id
+                FROM Library.Authors
+                WHERE name = ?;
+            `
+            const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql,[name]);
+            if(rows.length == 0){
+                return null;
+            }
+            else{
+                let x = rows[0];
+                let author_id = x.author_id;
+                return author_id;
+            }
+        }
+        catch(e){
+            console.log(e);
+            return null;
+        }
+    }
+
     async addAuthor(name:string){
         try {
             const sql : string = `
-                INSERT INTO library.authors (name)
+                INSERT INTO Library.Authors (name)
                 VALUES(?)
                 ON DUPLICATE KEY UPDATE name = ?;
             `;
@@ -269,7 +292,7 @@ export class DataAccessLayer {
     async updateAuthor(author : Author){
         try{
             const sql : string = `
-                UPDATE library.authors SET
+                UPDATE Library.Authors SET
                     name = ?
                 WHERE 
                     author_id = ?;
@@ -285,7 +308,7 @@ export class DataAccessLayer {
     async deleteAuthor(id : number){
         try{
             const sql : string = `
-                DELETE FROM library.authors 
+                DELETE FROM Library.Authors 
                 WHERE author_id = ?;
             `
 
@@ -303,7 +326,7 @@ export class DataAccessLayer {
 
         const sql: string = `
             SELECT editor_id, name
-            FROM library.editors
+            FROM Library.Editors
         `
 
         const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql);
@@ -324,7 +347,7 @@ export class DataAccessLayer {
         try{
             const sql : string = `
                 SELECT editor_id, name
-                FROM library.editors
+                FROM Library.Editors
                 WHERE editor_id = ?;
             `
 
@@ -349,11 +372,35 @@ export class DataAccessLayer {
         }
     }
 
+    async getEditorId(name: string) : Promise<number | null> {
+        try{
+            const sql : string = `
+                SELECT editor_id
+                FROM Library.Editors
+                WHERE name = ?;
+            `
+            const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql,[name]);
+            if(rows.length == 0){
+                return null;
+            }
+            else{
+                let x = rows[0];
+                let editor_id = x.editor_id;
+                return editor_id;
+            }
+        }
+        catch(e){
+            console.log(e);
+            return null;
+        }
+    }
+
     async addEditor(name:string){
         try {
             const sql : string = `
-                INSERT INTO library.editors (name)
+                INSERT INTO Library.Editors (name)
                 VALUES(?)
+                ON DUPLICATE KEY UPDATE name = ?;
             `;
 
             await this._connection.query(sql,[name]);
@@ -366,7 +413,7 @@ export class DataAccessLayer {
     async updateEditor(editor : Editor){
         try{
             const sql : string = `
-                UPDATE library.editors SET
+                UPDATE Library.Editors SET
                     name = ?
                 WHERE 
                     editor_id = ?;
@@ -382,7 +429,7 @@ export class DataAccessLayer {
     async deleteEditor(id : number){
         try{
             const sql : string = `
-                DELETE FROM library.editors 
+                DELETE FROM Library.Editors 
                 WHERE editor_id = ?;
             `
 
@@ -400,7 +447,7 @@ export class DataAccessLayer {
 
         const sql: string = `
             SELECT place_id, house, room, bookcase, shelf
-            FROM library.places
+            FROM Library.Places
         `
 
         const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql);
@@ -422,7 +469,7 @@ export class DataAccessLayer {
     async addPlace(house: string, room: string, bookcase: number, shelf: number){
         try{
             const sql : string = `
-                INSERT INTO library.Places (house, room, bookcase, shelf)
+                INSERT INTO Library.Places (house, room, bookcase, shelf)
                 SELECT * FROM (SELECT ?, ?, ?, ?) AS tmp
                 WHERE NOT EXISTS (
                     SELECT 1 
@@ -442,7 +489,7 @@ export class DataAccessLayer {
         try{
             const sql : string = `
                 SELECT place_id 
-                FROM Places 
+                FROM Library.Places 
                 WHERE house = ? AND room = ? AND bookcase = ? AND shelf = ?;
             `;
 
@@ -463,8 +510,72 @@ export class DataAccessLayer {
         }
     }
 
-    //Books
+    //Book connections
+    async addBookAuthor(book_id: number, author_id: number){
+        try{
+            const sql : string = `
+                INSERT INTO Library.BookAuthors (book_id, author_id)
+                SELECT * FROM (SELECT ?, ?) AS tmp
+                WHERE NOT EXISTS (
+                    SELECT 1 
+                    FROM Library.BookAuthors 
+                    WHERE book_id = ? AND author_id = ?
+            `
 
+            await this._connection.query(sql,[book_id, author_id, book_id, author_id]);
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    async deleteBookAuthor(book_id: number){
+        try{
+            const sql : string = `
+                DELETE FROM Library.BookAuthors 
+                WHERE book_id = ?;
+            `;
+
+            await this._connection.query(sql,[book_id]);
+        }
+        catch (e){
+            console.log(e);
+        }
+    }
+
+    async addBookEditor(book_id: number, editor_id: number){
+        try{
+            const sql : string = `
+                INSERT INTO Library.BookAuthors (book_id, editor_id)
+                SELECT * FROM (SELECT ?, ?) AS tmp
+                WHERE NOT EXISTS (
+                    SELECT 1 
+                    FROM Library.BookAuthors 
+                    WHERE book_id = ? AND editor_id = ?
+            `
+
+            await this._connection.query(sql,[book_id, editor_id, book_id, editor_id]);
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    async deleteBookEditor(book_id: number){
+        try{
+            const sql : string = `
+                DELETE FROM Library.BookEditors 
+                WHERE book_id = ?;
+            `;
+
+            await this._connection.query(sql,[book_id]);
+        }
+        catch (e){
+            console.log(e);
+        }
+    }
+
+    //Books
     async getAllBooks(){
         const books: Book[] = [];
 
@@ -482,12 +593,12 @@ export class DataAccessLayer {
                 p.bookcase,
                 p.shelf,
                 b.comment
-            FROM Books b
-            LEFT JOIN BookAuthors ba ON b.book_id = ba.book_id
-            LEFT JOIN Authors a ON ba.author_id = a.author_id
-            LEFT JOIN BookEditors be ON b.book_id = be.book_id
-            LEFT JOIN Editors e ON be.editor_id = e.editor_id
-            LEFT JOIN Places p ON b.place_id = p.place_id
+            FROM Library.Books b
+            LEFT JOIN Library.BookAuthors ba ON b.book_id = ba.book_id
+            LEFT JOIN Library.Authors a ON ba.author_id = a.author_id
+            LEFT JOIN Library.BookEditors be ON b.book_id = be.book_id
+            LEFT JOIN Library.Editors e ON be.editor_id = e.editor_id
+            LEFT JOIN Library.Places p ON b.place_id = p.place_id
             group by b.book_id;
         `
 
@@ -532,10 +643,10 @@ export class DataAccessLayer {
                 p.bookcase,
                 p.shelf,
                 b.comment
-            FROM Books b
-            LEFT JOIN Places p ON b.place_id = p.place_id
-            JOIN BookAuthors ba ON b.book_id = ba.book_id
-            JOIN Authors a ON ba.author_id = a.author_id
+            FROM Library.Books b
+            LEFT JOIN Library.Places p ON b.place_id = p.place_id
+            JOIN Library.BookAuthors ba ON b.book_id = ba.book_id
+            JOIN Library.Authors a ON ba.author_id = a.author_id
             GROUP BY b.book_id;
         `
 
@@ -579,10 +690,10 @@ export class DataAccessLayer {
                 p.bookcase,
                 p.shelf,
                 b.comment
-            FROM Books b
-            LEFT JOIN Places p ON b.place_id = p.place_id
-            JOIN BookEditors be ON b.book_id = be.book_id
-            JOIN Editors e ON ba.author_id = a.author_id
+            FROM Library.Books b
+            LEFT JOIN Library.Places p ON b.place_id = p.place_id
+            JOIN Library.BookEditors be ON b.book_id = be.book_id
+            JOIN Library.Editors e ON ba.author_id = a.author_id
             GROUP BY b.book_id;
         `
 
@@ -625,12 +736,12 @@ export class DataAccessLayer {
                     p.bookcase,
                     p.shelf,
                     b.comment
-                FROM Books b
-                LEFT JOIN BookAuthors ba ON b.book_id = ba.book_id
-                LEFT JOIN Authors a ON ba.author_id = a.author_id
-                LEFT JOIN BookEditors be ON b.book_id = be.book_id
-                LEFT JOIN Editors e ON be.editor_id = e.editor_id
-                LEFT JOIN Places p ON b.place_id = p.place_id
+                FROM Library.Books b
+                LEFT JOIN Library.BookAuthors ba ON b.book_id = ba.book_id
+                LEFT JOIN Library.Authors a ON ba.author_id = a.author_id
+                LEFT JOIN Library.BookEditors be ON b.book_id = be.book_id
+                LEFT JOIN Library.Editors e ON be.editor_id = e.editor_id
+                LEFT JOIN Library.Places p ON b.place_id = p.place_id
                 where b.book_id = ?;
             `
 
@@ -665,13 +776,117 @@ export class DataAccessLayer {
         }
     }
 
+    async getBookId(title: string, publisher: string, publishing_date: Date ,isbn: string,
+                    page_count: number, place_id: number): Promise<number | null> {
+        try{
+            const sql: string = `
+                SELECT book_id 
+                FROM Library.Books 
+                WHERE title = ? AND publisher = ? AND publishing_date = ? AND isbn = ? AND page_count = ? AND place_id = ?;
+            `
+
+            const [rows,fields] = await this._connection.query<mysql.RowDataPacket[]>(sql, [title, publisher, publishing_date, isbn, page_count, place_id]);
+
+            if(rows.length == 0){
+                return null;
+            }
+            else{
+               let row = rows[0];
+               const book_id = row.book_id;
+               return book_id;
+            }
+        }
+        catch(e){
+            console.log(e);
+            return null;
+        }
+    }
+
     async addBook(title: string, authors: string[], editor: string, publisher: string, publishing_date: Date, isbn: string,
                   page_count: number, house: string, room: string, bookcase: number, shelf: number, comment: string) {
         try{
             await this.addPlace(house, room, bookcase, shelf);
             const place_id = await this.getPlaceId(house, room, bookcase, shelf);
 
+            const sql: string = `
+                INSERT INTO Library.Books (title, publisher, publishing_date, isbn, page_count, place_id, comment)
+                VALUES (?,?,?,?,?,?,?);
+            `;
 
+            await this._connection.query(sql,[house, room, bookcase, shelf, house, room, bookcase, shelf]);
+
+            const book_id = await this.getBookId(title, publisher, publishing_date, isbn, page_count, place_id);
+
+            if(authors.length > 0){
+                for (const author of authors) {
+                    await this.addAuthor(author);
+                    const author_id = await this.getAuthorId(author);
+                    await this.addBookAuthor(book_id, author_id);
+                }
+            }
+
+            if(editor != null){
+                await this.addEditor(editor);
+                const editor_id = await this.getEditorId(editor);
+                await this.addBookEditor(book_id, editor_id);
+            }
+
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    async updateBook(book: Book){
+        try{
+            await this.addPlace(book.house, book.room, book.bookcase, book.shelf);
+            const place_id = await this.getPlaceId(book.house, book.room, book.bookcase, book.shelf);
+
+            const sql: string = `
+                UPDATE Library.Books SET
+                    title = ?,
+                    publisher = ?,
+                    publishing_date = ?,
+                    isbn = ?,
+                    page_count = ?,
+                    place_id = ?
+                WHERE
+                    book_id = ?;
+            `;
+
+            await this._connection.query(sql,
+                [book.title, book.publisher, book.publishing_date, book.isbn, book.page_count, place_id, book.book_id]);
+
+            if(book.authors != null){
+                const authorsSplit = book.authors.split(',');
+                await this.deleteBookAuthor(book.book_id);
+                for (const author of authorsSplit) {
+                    await this.addAuthor(author);
+                    const author_id = await this.getAuthorId(author);
+                    await this.addBookAuthor(book.book_id, author_id);
+                }
+            }
+
+            if(book.editor != null){
+                await this.deleteBookEditor(book.book_id);
+                await this.addEditor(book.editor);
+                const editor_id = await this.getEditorId(book.editor);
+                await this.addBookEditor(book.book_id, editor_id);
+            }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    async deleteBook(id: number){
+        try{
+            const sql: string = `
+                DELETE FROM Library.Books 
+                WHERE book_id = ?;
+            `;
+
+            await this._connection.query(sql,[id]);
         }
         catch(e){
             console.log(e);
