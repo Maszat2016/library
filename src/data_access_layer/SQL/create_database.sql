@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS  Library.Books (
     book_id INT AUTO_INCREMENT PRIMARY KEY,    -- Unique identifier for each book
     title VARCHAR(255) NOT NULL,               -- Book title
     publisher VARCHAR(255),                    -- Publisher name
-    publishing_date DATE,                      -- Publishing date
+    publishing_date INT,                      -- Publishing date
     isbn VARCHAR(13),                          -- ISBN code (13 characters)
     page_count INT,                            -- Number of pages in the book
     place_id INT,                              -- Location of the book (references Places table)

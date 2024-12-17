@@ -3,9 +3,7 @@ import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import {promisify} from "util";
-import catchAsync from '../utils/catchAsync'
-import {dataAccessLayer} from "../server.js";
-import AppError from "../utils/appError.js";
+import {dataAccessLayer} from "../utils/server.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

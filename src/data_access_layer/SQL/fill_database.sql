@@ -13,10 +13,10 @@ alter table Library.Books auto_increment = 1;
 
 INSERT INTO Library.Books (title, publisher, publishing_date, isbn, page_count, place_id, comment)
 VALUES
-    ('The Great Adventure', 'Adventure Press', '2021-05-15', '9781234567890', 320, 1, 'Signed first edition'),
-    ('Mystery of the Lost Island', 'Mystery Books Ltd.', '2020-10-01', '9789876543210', 450, 2, 'Book Club Edition'),
-    ('The Science of Everything', 'Academic Press', '2019-03-22', '9781111111111', 550, 3, 'Includes author annotations'),
-    ('Historical Chronicles', 'History World', '2022-11-11', '9782222222222', 400, 4, 'First print, hardcover');
+    ('The Great Adventure', 'Adventure Press', 2021, '9781234567890', 320, 1, 'Signed first edition'),
+    ('Mystery of the Lost Island', 'Mystery Books Ltd.', 2020, '9789876543210', 450, 2, 'Book Club Edition'),
+    ('The Science of Everything', 'Academic Press', 2019, '9781111111111', 550, 3, 'Includes author annotations'),
+    ('Historical Chronicles', 'History World', 2022, '9782222222222', 400, 4, 'First print, hardcover');
 
 delete from Library.Authors;
 alter table Library.Authors auto_increment = 1;

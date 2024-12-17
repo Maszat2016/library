@@ -7,7 +7,7 @@ export type Book = {
     authors: string,
     editor: string,
     publisher: string,
-    publishing_date: Date,
+    publishing_date: number,
     isbn: string,
     page_count: number,
     house: string,
@@ -22,7 +22,7 @@ export type BookAuthor = {
     title: string,
     authors: string
     publisher: string,
-    publishing_date: Date,
+    publishing_date: number,
     isbn: string,
     page_count: number,
     house: string,
@@ -37,7 +37,7 @@ export type BookEditor = {
     title: string,
     editor: string
     publisher: string,
-    publishing_date: Date,
+    publishing_date: number,
     isbn: string,
     page_count: number,
     house: string,
@@ -88,6 +88,8 @@ export class DataAccessLayer {
     //connection to the database
     async initConnection(dbUser:string, dbPassword: string, dbHost: string, dbPort: number) {
         const ConnectionOptions: mysql.ConnectionOptions = {
+            user: dbUser,
+            password: dbPassword,
             host: dbHost,
             port: dbPort,
         }
@@ -489,7 +491,7 @@ export class DataAccessLayer {
                 SELECT * FROM (SELECT ?, ?, ?, ?) AS tmp
                 WHERE NOT EXISTS (
                     SELECT 1 
-                    FROM Places 
+                    FROM Library.Places 
                     WHERE house = ? AND room = ? AND bookcase = ? AND shelf = ?
                 );
             `
@@ -531,11 +533,11 @@ export class DataAccessLayer {
         try{
             const sql : string = `
                 INSERT INTO Library.BookAuthors (book_id, author_id)
-                SELECT * FROM (SELECT ?, ?) AS tmp
+                SELECT * FROM (SELECT ? AS c1, ? AS c2) AS tmp
                 WHERE NOT EXISTS (
                     SELECT 1 
                     FROM Library.BookAuthors 
-                    WHERE book_id = ? AND author_id = ?
+                    WHERE book_id = ? AND author_id = ?);
             `
 
             await this._connection.query(sql,[book_id, author_id, book_id, author_id]);
@@ -563,14 +565,14 @@ export class DataAccessLayer {
         try{
             const sql : string = `
                 INSERT INTO Library.BookAuthors (book_id, editor_id)
-                SELECT * FROM (SELECT ?, ?) AS tmp
+                SELECT * FROM (SELECT ? AS c1, ? AS c2) AS tmp
                 WHERE NOT EXISTS (
                     SELECT 1 
                     FROM Library.BookAuthors 
-                    WHERE book_id = ? AND editor_id = ?
+                    WHERE book_id = ? AND editor_id = ?);
             `
 
-            await this._connection.query(sql,[book_id, editor_id, book_id, editor_id]);
+            await this._connection.query(sql,[book_id, editor_id]);
         }
         catch(e){
             console.log(e);
@@ -709,8 +711,7 @@ export class DataAccessLayer {
             FROM Library.Books b
             LEFT JOIN Library.Places p ON b.place_id = p.place_id
             JOIN Library.BookEditors be ON b.book_id = be.book_id
-            JOIN Library.Editors e ON ba.author_id = a.author_id
-            GROUP BY b.book_id;
+            JOIN Library.Editors e ON be.editor_id = e.editor_id;
         `
 
         const [rows, fileds] = await this._connection.query<mysql.RowDataPacket[]>(sql);
@@ -739,6 +740,7 @@ export class DataAccessLayer {
     async getFilteredBooks(filter: BookFilter):Promise<Book[]> {
         let sql:string = `
             SELECT
+                b.book_id,
                 b.title,
                 GROUP_CONCAT(DISTINCT a.name SEPARATOR ', ') AS authors,
                 e.name AS editor,
@@ -828,7 +830,7 @@ export class DataAccessLayer {
         return books;
     }
 
-    async getBookByID(id: number): Promise<Book | null> {
+    async getBookById(id: number): Promise<Book | null> {
         try{
             const sql: string = `
                 SELECT 
@@ -884,23 +886,21 @@ export class DataAccessLayer {
         }
     }
 
-    async getBookId(title: string, publisher: string, publishing_date: Date ,isbn: string,
+    async getBookId(title: string, publisher: string, publishing_date: number ,isbn: string,
                     page_count: number, place_id: number): Promise<number | null> {
         try{
             const sql: string = `
-                SELECT book_id 
-                FROM Library.Books 
-                WHERE title = ? AND publisher = ? AND publishing_date = ? AND isbn = ? AND page_count = ? AND place_id = ?;
+                SELECT LAST_INSERT_ID();
             `
 
-            const [rows,fields] = await this._connection.query<mysql.RowDataPacket[]>(sql, [title, publisher, publishing_date, isbn, page_count, place_id]);
+            const [rows,fields] = await this._connection.query<mysql.RowDataPacket[]>(sql);
 
             if(rows.length == 0){
                 return null;
             }
             else{
                let row = rows[0];
-               const book_id = row.book_id;
+               const book_id = row['LAST_INSERT_ID()'];
                return book_id;
             }
         }
@@ -910,7 +910,7 @@ export class DataAccessLayer {
         }
     }
 
-    async addBook(title: string, authors: string[], editor: string, publisher: string, publishing_date: Date, isbn: string,
+    async addBook(title: string, authors: string[], editor: string, publisher: string, publishing_date: number, isbn: string,
                   page_count: number, house: string, room: string, bookcase: number, shelf: number, comment: string) {
         try{
             await this.addPlace(house, room, bookcase, shelf);
@@ -921,14 +921,16 @@ export class DataAccessLayer {
                 VALUES (?,?,?,?,?,?,?);
             `;
 
-            await this._connection.query(sql,[house, room, bookcase, shelf, house, room, bookcase, shelf]);
+            await this._connection.query(sql,[title, publisher, publishing_date, isbn, page_count, place_id, comment]);
 
             const book_id = await this.getBookId(title, publisher, publishing_date, isbn, page_count, place_id);
 
             if(authors.length > 0){
                 for (const author of authors) {
+                    console.log(author);
                     await this.addAuthor(author);
                     const author_id = await this.getAuthorId(author);
+                    console.log(book_id, author_id);
                     await this.addBookAuthor(book_id, author_id);
                 }
             }

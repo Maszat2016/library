@@ -13,6 +13,7 @@ router.route('/author')
 router.route('/editor')
     .get(bookController.getBooksWithEditor)
 router.route('/:id')
+    .get(bookController.getBookById)
     .patch(bookController.updateBook)
     .delete(bookController.deleteBook);
 

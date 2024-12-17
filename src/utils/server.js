@@ -1,4 +1,4 @@
-import { DataAccessLayer } from './data_access_layer/data_access_layer.js';
+import { DataAccessLayer } from '.././data_access_layer/data_access_layer.ts';
 import dotenv from 'dotenv';
 import app from './index';
 import path from "path";
@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
 
-dotenv.config({ path: path.resolve(_dirname, '../config.env') });
+dotenv.config({ path: path.resolve(_dirname, '../../config.env') });
 
 const DATABASE_HOST = 'localhost';
 const DATABASE_PORT = 3306;
@@ -35,14 +35,14 @@ async function initializeServer() {
     catch (error) {
         console.log('Error when initializing database: ' + error);
     }
-
-    initializeServer();
-
-    process.on('SIGINT', async () => {
-        await dataAccessLayer.endConnection();
-        console.log('Database connection closed');
-        process.exit();
-    })
 }
+
+initializeServer();
+
+process.on('SIGINT', async () => {
+    await dataAccessLayer.endConnection();
+    console.log('Database connection closed');
+    process.exit();
+})
 
 export {dataAccessLayer};
