@@ -6,6 +6,9 @@ import { fileURLToPath } from 'url';
 
 import bookRouter from './router/bookRouter';
 import userRouter from './router/userRouter';
+import authorRouter from './router/authorRouter';
+import editorRouter from './router/editorRouter';
+import placeRouter from './router/placeRouter';
 
 const app = express()
 
