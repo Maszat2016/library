@@ -165,6 +165,12 @@ export class DataAccessLayer {
         }
     }
 
+    async getUserByUsername(username : string) {
+        const sql = 'SELECT * FROM Library.Users WHERE username = ?';
+        const [rows] = await this._connection.query(sql, [username]);
+        return rows[0] || null;
+    }
+
     async updateUser(user : User){
         try{
             const sql : string = `
