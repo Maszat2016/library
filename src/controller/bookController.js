@@ -11,9 +11,29 @@ const getBookPage = (req, res) => {
 
 const getAllBooks = async (req, res) => {
     try{
-        res.status(201).json({
+        const title = req.query.title !== '' ? req.query.title : null;
+        const author = req.query.author !== '' ? req.query.author : null;
+        const editor = req.query.editor !== '' ? req.query.editor : null;
+        const publisher = req.query.publisher !== '' ? req.query.publisher : null;
+        const page_count = req.query.page_count !== '' ? req.query.page_count : null;
+        const house = req.query.house !== '' ? req.query.house : null;
+        const comment = req.query.comment !== '' ? req.query.comment : null;
+
+        const filters = {
+            title: title,
+            author: author,
+            editor: editor,
+            publisher: publisher,
+            page_count: page_count,
+            house: house,
+            comment: comment
+        }
+
+        let books = await dataAccessLayer.getFilteredBooks(filters);
+
+        res.status(200).json({
             status: 'success',
-            data: null
+            data: books
         });
     }
     catch (error) {
@@ -25,6 +45,9 @@ const getAllBooks = async (req, res) => {
 }
 
 const getBooksWithAuthor = async (req, res) => {
+
+
+
     try{
         res.status(201).json({
             status: 'success',

@@ -72,6 +72,16 @@ export type User = {
     isAdmin : boolean
 };
 
+export type BookFilter = {
+    title?: string,
+    author?: string,
+    editor?: string,
+    publisher?: string,
+    page_count?: number,
+    house?: string,
+    comment?: string;
+}
+
 export class DataAccessLayer {
     private _connection: mysql.Connection;
 
@@ -722,6 +732,98 @@ export class DataAccessLayer {
             };
             books.push(book);
         })
+
+        return books;
+    }
+
+    async getFilteredBooks(filter: BookFilter):Promise<Book[]> {
+        let sql:string = `
+            SELECT
+                b.title,
+                GROUP_CONCAT(DISTINCT a.name SEPARATOR ', ') AS authors,
+                e.name AS editor,
+                b.publisher,
+                b.publishing_date,
+                b.isbn,
+                b.page_count,
+                p.house,
+                p.room,
+                p.bookcase,
+                p.shelf,
+                b.comment
+            FROM Library.Books b
+            LEFT JOIN Library.BookAuthors ba ON b.book_id = ba.book_id
+            LEFT JOIN Library.Authors a ON ba.author_id = a.author_id
+            LEFT JOIN Library.BookEditors be ON b.book_id = be.book_id
+            LEFT JOIN Library.Editors e ON be.editor_id = e.editor_id
+            LEFT JOIN Library.Places p ON b.place_id = p.place_id
+            WHERE 1=1
+        `
+
+        const params: Array<string> = [];
+
+        if(filter.title != null){
+            sql += `AND LOWER(b.title) LIKE ?`;
+            params.push(`%${filter.title.toLowerCase()}%`);
+        }
+        if(filter.publisher != null){
+            sql += `AND LOWER(b.publisher) LIKE ?`;
+            params.push(`%${filter.publisher.toLowerCase()}%`);
+        }
+        if(filter.author != null){
+            sql += `AND LOWER(a.name) LIKE ?`;
+            params.push(`%${filter.author.toLowerCase()}%`);
+        }
+
+        if(filter.editor != null){
+            sql += `AND LOWER(e.name) LIKE ?`;
+            params.push(`%${filter.editor.toLowerCase()}%`);
+        }
+
+        if(filter.house != null){
+            sql += `AND LOWER(p.house) LIKE ?`;
+            params.push(`%${filter.house.toLowerCase()}%`);
+        }
+
+        if(filter.page_count != null){
+            sql += `AND b.page_count <= ?`;
+            params.push(filter.page_count.toString());
+        }
+        if(filter.comment != null){
+            sql += `AND LOWER(b.comment) LIKE ?`;
+            params.push(`%${filter.comment.toLowerCase()}%`);
+        }
+
+        sql += `group by b.book_id;`
+
+        const books: Array<Book> = [];
+
+        try{
+            sql = this._connection.format(sql, params);
+            const [rows, fields] = await this._connection.query<mysql.RowDataPacket[]>(sql);
+
+            rows.forEach((row) => {
+                let book: Book = {
+                    book_id: row.book_id,
+                    title: row.title,
+                    authors: row.authors,
+                    editor: row.editor,
+                    publisher: row.publisher,
+                    publishing_date: row.publishing_date,
+                    isbn: row.isbn,
+                    page_count: row.page_count,
+                    house: row.house,
+                    room: row.room,
+                    bookcase: row.bookcase,
+                    shelf: row.shelf,
+                    comment: row.comment
+                };
+                books.push(book);
+            })
+        }
+        catch(e){
+            console.log(e);
+        }
 
         return books;
     }
