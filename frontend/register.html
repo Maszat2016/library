@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link type="text/css" rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="menu" id="menu-bar">
+    <a href="/api/users/login" id="login-button" class="login-link">Login</a>
+</div>
+<div class="registration-container" id="registration-container">
+    <h1 id="registration-title">Register</h1>
+    <form id="registration-form">
+        <div class="registration-form-group" id="username-group">
+            <label for="username" id="username-label">Username</label>
+            <input type="text" id="username" name="username" class="registration-input" required>
+        </div>
+        <div class="registration-form-group" id="password-group">
+            <label for="password" id="password-label">Password</label>
+            <input type="password" id="password" name="password" class="registration-input" required>
+        </div>
+        <button type="submit" class="registration-button" id="registration-button">Register</button>
+    </form>
+    <a href="/api/users/login" class="login-link">Already have an account? Login</a>
+</div>
+</body>
+</html>

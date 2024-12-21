@@ -1,0 +1,259 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5dc; /* Beige background */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    overflow-x: hidden;
+    padding: 50px 0 0;
+}
+/* Menu */
+.menu {
+    background-color: #48a75c; /* Muted green to complement beige */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu a {
+    background-color: #276c38;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 20px;
+    width: 8%;
+    white-space: nowrap;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+/* Login page - Login container */
+.login-container {
+    background: #ffffff; /* White background for the form */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: calc(100% - 40px);
+    max-width: 400px;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #48a75c; /* Green text for the heading */
+}
+
+.login-form-group {
+    margin-bottom: 15px;
+}
+
+.login-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #48a75c; /* Green label color */
+}
+
+.login-form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.login-form-group input:focus {
+    border-color: #48a75c; /* Green border on focus */
+    outline: none;
+}
+
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #48a75c; /* Green button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #48a75c; /* Darker green on hover */
+}
+
+/* Register button */
+.register-link {
+    display: block;
+    padding: 10px;
+    background-color: #276c38; /* Slightly darker green for Register button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    background-color: #276c38; /* Darker green on hover */
+}
+
+/* Registration page - register form */
+
+.registration-container {
+    background: #ffffff; /* White background for the form */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: calc(100% - 40px);
+    max-width: 400px;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.registration-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #48a75c; /* Green text for the heading */
+}
+
+.registration-form-group {
+    margin-bottom: 15px;
+}
+
+.registration-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #48a75c; /* Green label color */
+}
+
+.registration-form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.registration-form-group input:focus {
+    border-color: #48a75c; /* Green border on focus */
+    outline: none;
+}
+
+.registration-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #48a75c; /* Green button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.registration-button:hover {
+    background-color: #48a75c; /* Darker green on hover */
+}
+
+/* Login link */
+.login-link {
+    display: block;
+    padding: 10px;
+    background-color: #4e8c44; /* Muted green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    background-color: #3cb257; /* Darker green on hover */
+}
+
+/* Main Book Container Styling */
+.book-container {
+    padding: 20px;
+    text-align: center;
+    width: 80%;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+/* Book Details Container */
+.book-details-container {
+    background-color: #48a75c;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-bottom: 20px; /* Adds space between book details and button */
+    width: 100%;
+    padding: 5px;
+}
+
+/* Book Title Styling */
+.book-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: white; /* Green color for the title */
+}
+
+/* Styling for Book Info Sections (Author/Editor and Page Count) */
+.book-details-container div {
+    font-size: 18px;
+    color: white;
+    margin-bottom: 10px; /* Adds space between each piece of information */
+}
+
+.book-button {
+    background-color: #ffffff; /* White background for the button */
+    color: #3cb257; /* Green text color */
+    border: 1px solid #3cb257; /* Green border */
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px; /* Adds space between the button and other elements */
+    font-weight: bold;
+}
+
+.book-button:hover {
+    background-color: #218838; /* Darker green on hover */
+    color: white; /* White text on hover */
+}
+
+/* Back Button Styling */
+.back-button {
+    background-color: white; /* Green background for the button */
+    color: #48a75c;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.back-button:hover {
+    background-color: #48a75c; /* Darker green on hover */
+}
