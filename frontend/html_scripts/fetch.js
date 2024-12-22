@@ -20,21 +20,17 @@ async function fillBookContainer() {
             filters.append('page_count', page_filter.value);
         }
 
-        console.log('/api/books/all?' + filters.toString());
-
         const response = await fetch('/api/books/all?' + filters.toString());
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }
 
         const datas = await response.json();
-        console.log(datas);
         const books = datas.data;
         const bookContainer = document.getElementById('book-container');
         bookContainer.innerHTML = "";
 
         books.forEach(book => {
-            console.log(book);
             bookContainer.appendChild(
                 createContainer.createBookContainer(book.book_id, book.title, book.authors, book.editor, book.page_count));
         })
@@ -42,6 +38,12 @@ async function fillBookContainer() {
     catch (e) {
         console.error('Error fetching books:', e);
     }
+}
+
+function resetFilters() {
+    document.getElementById('filter-text').value = "";
+    document.getElementById('filter-page-count').value = "";
+    fillBookContainer();
 }
 
 async function fetchBookById(book_id) {
@@ -53,9 +55,7 @@ async function fetchBookById(book_id) {
         }
 
         const datas = await response.json();
-        console.log(datas);
         const book = datas.data;
-        console.log(book);
 
         modal.fillBookModal(book.book_id, book.title, book.authors, book.editor, book.publisher, book.publishing_date, book.isbn,
             book.page_count, book.house, book.room, book.bookcase, book.shelf, book.comment);
@@ -100,21 +100,6 @@ async function createBook() {
         alert("A cím, oldalszám és hely mezőket ki kell tölteni")
         return;
     }
-
-    console.log(JSON.stringify({
-        title: title,
-        authors: (authors == "") ? null : authors,
-        editor: (editor == "") ? null : editor,
-        publisher: (publisher == "") ? null : publisher,
-        publishing_date: parseInt(publishingDate),
-        isbn: (isbn == "") ? null : isbn,
-        page_count: parseInt(pageCount),
-        house: house,
-        room: room,
-        bookcase: parseInt(bookcase),
-        shelf: parseInt(shelf),
-        comment: (comment == "") ? null : comment
-    }))
 
     try{
         const response = await fetch('/api/books', {
@@ -181,8 +166,6 @@ async function updateBookById(book_id) {
     if(shelf){changed.shelf = parseInt(shelf)}
     if(comment){changed.comment = comment}
 
-    console.log(changed);
-
     try{
         const response = await fetch(`/api/books/${book_id}`, {
             method: 'PATCH',
@@ -209,6 +192,7 @@ async function updateBookById(book_id) {
 
 export default {
     fillBookContainer,
+    resetFilters,
     fetchBookById,
     deleteBookById,
     createBook,

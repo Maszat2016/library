@@ -10,179 +10,183 @@
     <div class="menu" id="menu-bar">
         <a id="add-book-button" class="add-book-link">Új könyv hozzáadása</a>
         <a href="/api/users/login" id="login-button" class="login-link">Bejelentkezés</a>
+        <a href="/api/users/register" id="register-button" class="register-link">Regisztráció</a>
+        <a href="" id="logoutButton" class="logout">Kijelentkezés</a>
     </div>
-    <div class="filter-container" id="filter-container">
-        <h2>Filter Books</h2>
-        <form id="filter-form">
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label for="filter-text">Text:</label>
-                    <input type="text" id="filter-text" name="filter-text" placeholder="Cím, Szerző, Szerkesztő, Kiadó, Ház vagy Megjegyzés">
+    <div class="header" id="header">Jelentkezz be, hogy megtekintsd a könyveket!</div>
+        <div class="filter-container" id="filter-container">
+            <h2>Filter Books</h2>
+            <form id="filter-form">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="filter-text">Text:</label>
+                        <input type="text" id="filter-text" name="filter-text" placeholder="Cím, Szerző, Szerkesztő, Kiadó, Ház vagy Megjegyzés">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-page-count">Page Count:</label>
+                        <input type="number" id="filter-page-count" name="filter-page-count" min="1" placeholder="Maximum Oldalszám">
+                    </div>
+                    <button type="button" id="apply-filter" class="filter-button">Szűrés</button>
+                    <button type="button" id="reset-filter" class="filter-button">Szűrő visszaállítása</button>
                 </div>
-                <div class="filter-group">
-                    <label for="filter-page-count">Page Count:</label>
-                    <input type="number" id="filter-page-count" name="filter-page-count" min="1" placeholder="Maximum Oldalszám">
-                </div>
-                <button type="button" id="apply-filter" class="filter-button">Apply Filter</button>
-            </div>
-        </form>
-    </div>
-    <div class="book-container" id="book-container">
+            </form>
+        </div>
+        <div class="book-container" id="book-container">
 
-    </div>
-    <button class="show-modal hidden" id="show-modal"></button>
-    <div class="modal hidden" id="book_detail_modal">
-        <div class="book_details">
-            <div class="modal-book_title" id="modal-book_title">Londoni hétvége</div>
-            <button class="close-modal" id="close-modal">&times;</button>
-            <span id="modal-id-data">1</span>
-            <div class="authors" id="modal-authors">
-                <span class="modal-authors-data data" id="modal-authors-data">75000 Ft</span>
-            </div>
-            <div class="editor" id="modal-editor">
-                <div class="modal-editor-data data" id="modal-editor-data">75000 Ft</div>
-            </div>
-            <div class="publisher" id="modal-publisher">
-                <div class="modal-publisher-data data" id="modal-publisher-data">75000 Ft</div>
-            </div>
-            <div class="publishing_date" id="modal-publishing_date">
-                <div class="modal-publishing_date-data data" id="modal-publishing_date-data">75000 Ft</div>
-            </div>
-            <div class="isbn" id="modal-isbn">
-                <div class="modal-isbn-data data" id="modal-isbn-data">75000 Ft</div>
-            </div>
-            <div class="page_count" id="modal-page_count">
-                <div class="modal-page_count-data data" id="modal-page_count-data">75000 Ft</div>
-            </div>
-            <div class="place" id="modal-place">
-                <span class="modal-place-data data" id="modal-place-data"></span>
-                <div class="modal-house-data data" id="modal-house-data">75000 Ft</div>
-                <div class="modal-room-data data" id="modal-room-data">75000 Ft</div>
-                <div class="modal-bookcase-data data" id="modal-bookcase-data">75000 Ft</div>
-                <div class="modal-shelf-data data" id="modal-shelf-data">75000 Ft</div>
-            </div>
-            <div class="comment" id="modal-comment_count">
-                <div class="modal-comment-data data" id="modal-comment-data">75000 Ft</div>
-            </div>
-            <button class="delete_book" id="delete_book">Könyv törlése</button>
-            <button class="edit_book" id="edit_book">Könyv szerkesztése</button>
         </div>
-    </div>
-    <div class="add-book-container modal hidden" id="add-book-container">
-        <div class="add-book-form-container">
-            <h1>Új könyv hozzáadása</h1>
-            <button class="close-modal" id="close-modal-add">&times;</button>
-            <form id="add-book-form">
-                <div class="form-group">
-                    <label for="title">Cím</label>
-                    <input type="text" id="title" name="title" placeholder="Cím" required>
+        <button class="show-modal hidden" id="show-modal"></button>
+        <div class="modal hidden" id="book_detail_modal">
+            <div class="book_details">
+                <div class="modal-book_title" id="modal-book_title">Londoni hétvége</div>
+                <button class="close-modal" id="close-modal">&times;</button>
+                <span id="modal-id-data" class="hidden">1</span>
+                <div class="authors" id="modal-authors">
+                    <span class="modal-authors-data data" id="modal-authors-data">75000 Ft</span>
                 </div>
-                <div class="form-group">
-                    <label for="authors">Szerző(k):</label>
-                    <input type="text" id="authors" name="authors" placeholder="Szerzők vesszővel elválasztva"d>
+                <div class="editor" id="modal-editor">
+                    <div class="modal-editor-data data" id="modal-editor-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="editor">Szerkesztő</label>
-                    <input type="text" id="editor" name="editor" placeholder="Szerkesztő (ha nincs író)"d>
+                <div class="publisher" id="modal-publisher">
+                    <div class="modal-publisher-data data" id="modal-publisher-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="publisher">Kiadó</label>
-                    <input type="text" id="publisher" name="publisher" placeholder="Kiadó">
+                <div class="publishing_date" id="modal-publishing_date">
+                    <div class="modal-publishing_date-data data" id="modal-publishing_date-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="publishing_date">Kiadás éve</label>
-                    <input type="number" id="publishing_date" name="publishing_date" placeholder="Kiadás éve">
+                <div class="isbn" id="modal-isbn">
+                    <div class="modal-isbn-data data" id="modal-isbn-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="isbn">ISBN-kód</label>
-                    <input type="text" id="isbn" name="isbn" placeholder="ISBN-kód">
+                <div class="page_count" id="modal-page_count">
+                    <div class="modal-page_count-data data" id="modal-page_count-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="page_count">Oldalszám</label>
-                    <input type="number" id="page_count" name="page_count" placeholder="Oldalszám" required>
+                <div class="place" id="modal-place">
+                    <span class="modal-place-data data" id="modal-place-data"></span>
+                    <div class="modal-house-data data" id="modal-house-data">75000 Ft</div>
+                    <div class="modal-room-data data" id="modal-room-data">75000 Ft</div>
+                    <div class="modal-bookcase-data data" id="modal-bookcase-data">75000 Ft</div>
+                    <div class="modal-shelf-data data" id="modal-shelf-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="house">Ház</label>
-                    <input type="text" id="house" name="house" placeholder="Hely - ház" required>
+                <div class="comment" id="modal-comment_count">
+                    <div class="modal-comment-data data" id="modal-comment-data">75000 Ft</div>
                 </div>
-                <div class="form-group">
-                    <label for="room">Szoba</label>
-                    <input type="text" id="room" name="room" placeholder="Hely - szoba" required>
-                </div>
-                <div class="form-group">
-                    <label for="bookcase">Könyvesszekrény</label>
-                    <input type="number" id="bookcase" name="bookcase" placeholder="Hely - könyvesszekrény" required>
-                </div>
-                <div class="form-group">
-                    <label for="shelf">Polc</label>
-                    <input type="number" id="shelf" name="shelf" placeholder="Hely - polc" required>
-                </div>
-                <div class="form-group">
-                    <label for="comments">Megjegyzés</label>
-                    <textarea id="comments" name="comments" placeholder="Megjegyzések"></textarea>
-                </div>
-            </form>
-            <button class="form-button" id="create-book-button">Könyv hozzáadása</button>
+                <button class="delete_book" id="delete_book">Könyv törlése</button>
+                <button class="edit_book" id="edit_book">Könyv szerkesztése</button>
+            </div>
         </div>
-    </div>
-    <div class="update-book-container modal hidden" id="update-book-container">
-        <div class="update-book-form-container">
-            <h1>Könyv frissítése</h1>
-            <button class="close-modal" id="close-modal-update">&times;</button>
-            <form id="update-book-form">
-                <div class="form-group">
-                    <label for="title">Cím</label>
-                    <input type="text" id="update_title" name="title" placeholder="Cím" required>
-                </div>
-                <div class="form-group">
-                    <label for="authors">Szerző(k):</label>
-                    <input type="text" id="update_authors" name="authors" placeholder="Szerzők vesszővel elválasztva"d>
-                </div>
-                <div class="form-group">
-                    <label for="editor">Szerkesztő</label>
-                    <input type="text" id="update_editor" name="editor" placeholder="Szerkesztő (ha nincs író)"d>
-                </div>
-                <div class="form-group">
-                    <label for="publisher">Kiadó</label>
-                    <input type="text" id="update_publisher" name="publisher" placeholder="Kiadó">
-                </div>
-                <div class="form-group">
-                    <label for="publishing_date">Kiadás éve</label>
-                    <input type="number" id="update_publishing_date" name="publishing_date" placeholder="Kiadás éve">
-                </div>
-                <div class="form-group">
-                    <label for="isbn">ISBN-kód</label>
-                    <input type="text" id="update_isbn" name="isbn" placeholder="ISBN-kód">
-                </div>
-                <div class="form-group">
-                    <label for="page_count">Oldalszám</label>
-                    <input type="number" id="update_page_count" name="page_count" placeholder="Oldalszám" required>
-                </div>
-                <div class="form-group">
-                    <label for="house">Ház</label>
-                    <input type="text" id="update_house" name="house" placeholder="Hely - ház" required>
-                </div>
-                <div class="form-group">
-                    <label for="room">Szoba</label>
-                    <input type="text" id="update_room" name="room" placeholder="Hely - szoba" required>
-                </div>
-                <div class="form-group">
-                    <label for="bookcase">Könyvesszekrény</label>
-                    <input type="number" id="update_bookcase" name="bookcase" placeholder="Hely - könyvesszekrény" required>
-                </div>
-                <div class="form-group">
-                    <label for="shelf">Polc</label>
-                    <input type="number" id="update_shelf" name="shelf" placeholder="Hely - polc" required>
-                </div>
-                <div class="form-group">
-                    <label for="comments">Megjegyzés</label>
-                    <textarea id="update_comments" name="comments" placeholder="Megjegyzések"></textarea>
-                </div>
-            </form>
-            <button class="form-button" id="update-book-button">Könyv frissítése</button>
+        <div class="add-book-container modal hidden" id="add-book-container">
+            <div class="add-book-form-container">
+                <h1>Új könyv hozzáadása</h1>
+                <button class="close-modal" id="close-modal-add">&times;</button>
+                <form id="add-book-form">
+                    <div class="form-group">
+                        <label for="title">Cím</label>
+                        <input type="text" id="title" name="title" placeholder="Cím" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="authors">Szerző(k):</label>
+                        <input type="text" id="authors" name="authors" placeholder="Szerzők vesszővel elválasztva"d>
+                    </div>
+                    <div class="form-group">
+                        <label for="editor">Szerkesztő</label>
+                        <input type="text" id="editor" name="editor" placeholder="Szerkesztő (ha nincs író)"d>
+                    </div>
+                    <div class="form-group">
+                        <label for="publisher">Kiadó</label>
+                        <input type="text" id="publisher" name="publisher" placeholder="Kiadó">
+                    </div>
+                    <div class="form-group">
+                        <label for="publishing_date">Kiadás éve</label>
+                        <input type="number" id="publishing_date" name="publishing_date" placeholder="Kiadás éve">
+                    </div>
+                    <div class="form-group">
+                        <label for="isbn">ISBN-kód</label>
+                        <input type="text" id="isbn" name="isbn" placeholder="ISBN-kód">
+                    </div>
+                    <div class="form-group">
+                        <label for="page_count">Oldalszám</label>
+                        <input type="number" id="page_count" name="page_count" placeholder="Oldalszám" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="house">Ház</label>
+                        <input type="text" id="house" name="house" placeholder="Hely - ház" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="room">Szoba</label>
+                        <input type="text" id="room" name="room" placeholder="Hely - szoba" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookcase">Könyvesszekrény</label>
+                        <input type="number" id="bookcase" name="bookcase" placeholder="Hely - könyvesszekrény" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shelf">Polc</label>
+                        <input type="number" id="shelf" name="shelf" placeholder="Hely - polc" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="comments">Megjegyzés</label>
+                        <textarea id="comments" name="comments" placeholder="Megjegyzések"></textarea>
+                    </div>
+                </form>
+                <button class="form-button" id="create-book-button">Könyv hozzáadása</button>
+            </div>
         </div>
-    </div>
-    <div class="overlay hidden"></div>
+        <div class="update-book-container modal hidden" id="update-book-container">
+            <div class="update-book-form-container">
+                <h1>Könyv frissítése</h1>
+                <button class="close-modal" id="close-modal-update">&times;</button>
+                <form id="update-book-form">
+                    <div class="form-group">
+                        <label for="title">Cím</label>
+                        <input type="text" id="update_title" name="title" placeholder="Cím" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="authors">Szerző(k):</label>
+                        <input type="text" id="update_authors" name="authors" placeholder="Szerzők vesszővel elválasztva"d>
+                    </div>
+                    <div class="form-group">
+                        <label for="editor">Szerkesztő</label>
+                        <input type="text" id="update_editor" name="editor" placeholder="Szerkesztő (ha nincs író)"d>
+                    </div>
+                    <div class="form-group">
+                        <label for="publisher">Kiadó</label>
+                        <input type="text" id="update_publisher" name="publisher" placeholder="Kiadó">
+                    </div>
+                    <div class="form-group">
+                        <label for="publishing_date">Kiadás éve</label>
+                        <input type="number" id="update_publishing_date" name="publishing_date" placeholder="Kiadás éve">
+                    </div>
+                    <div class="form-group">
+                        <label for="isbn">ISBN-kód</label>
+                        <input type="text" id="update_isbn" name="isbn" placeholder="ISBN-kód">
+                    </div>
+                    <div class="form-group">
+                        <label for="page_count">Oldalszám</label>
+                        <input type="number" id="update_page_count" name="page_count" placeholder="Oldalszám" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="house">Ház</label>
+                        <input type="text" id="update_house" name="house" placeholder="Hely - ház" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="room">Szoba</label>
+                        <input type="text" id="update_room" name="room" placeholder="Hely - szoba" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookcase">Könyvesszekrény</label>
+                        <input type="number" id="update_bookcase" name="bookcase" placeholder="Hely - könyvesszekrény" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shelf">Polc</label>
+                        <input type="number" id="update_shelf" name="shelf" placeholder="Hely - polc" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="comments">Megjegyzés</label>
+                        <textarea id="update_comments" name="comments" placeholder="Megjegyzések"></textarea>
+                    </div>
+                </form>
+                <button class="form-button" id="update-book-button">Könyv frissítése</button>
+            </div>
+        </div>
+        <div class="overlay hidden"></div>
 </body>
 <script src="/html_scripts/index_page.js" type="module"></script>
 </html>

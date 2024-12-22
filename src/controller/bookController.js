@@ -37,6 +37,7 @@ const getAllBooks = async (req, res) => {
         });
     }
     catch (error) {
+        alert('Kérjük jelentkezzen be, hogy megtekinthesse a könyveket!')
         console.log(error);
         res.status(500).json({
             message: error.message
@@ -91,8 +92,6 @@ const addBook = async (req, res) => {
     const bookcase = req.body.bookcase;
     const shelf = req.body.shelf;
     const comment = req.body.comment;
-
-    console.log(title, authors, editor, publisher, publishing_date, isbn, page_count, house, room, bookcase, shelf, comment);
 
     try {
         await dataAccessLayer.addBook(title, authors, editor, publisher, publishing_date, isbn, page_count, house, room, bookcase, shelf, comment);

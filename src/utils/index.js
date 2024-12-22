@@ -9,6 +9,7 @@ import userRouter from '.././router/userRouter';
 import authorRouter from '.././router/authorRouter';
 import editorRouter from '.././router/editorRouter';
 import placeRouter from '.././router/placeRouter';
+import userController from "../controller/userController";
 
 const app = express()
 
@@ -26,5 +27,14 @@ app.use(cookieParser());
 
 app.use('/api/books', bookRouter);
 app.use('/api/users', userRouter);
+
+app.get('/api/check_admin', userController.protect, (req, res) => {
+    res.status(200).json({
+        success: 'success',
+        data: {
+            isAdmin: req.user.isAdmin
+        }
+    })
+});
 
 export default app;

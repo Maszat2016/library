@@ -5,22 +5,18 @@ const overlay = document.querySelector('.overlay');
 
 function fillBookModal(book_id, title, author, editor, publisher, publishing_date, isbn, page_count,
                        house, room, bookcase, shelf, comment) {
-    console.log("fillBookModal opened")
     if(author == null){
         document.getElementById('modal-authors').classList.add('hidden');
     }
     else{
         document.getElementById('modal-authors-data').textContent = author;
     }
-    console.log("fillBookModal editor coming")
     if(editor == null){
         document.getElementById('modal-editor').classList.add('hidden');
     }
     else{
         document.getElementById('modal-editor-data').textContent = editor;
     }
-    console.log(title, author, editor, publisher, publishing_date, isbn, page_count,
-        house, room, bookcase, shelf, comment);
 
     document.getElementById('modal-id-data').textContent = book_id;
     document.getElementById('modal-book_title').textContent = title;
@@ -33,7 +29,7 @@ function fillBookModal(book_id, title, author, editor, publisher, publishing_dat
     document.getElementById('modal-bookcase-data').textContent = bookcase;
     document.getElementById('modal-shelf-data').textContent = shelf;
     document.getElementById('modal-comment-data').textContent = comment;
-    console.log(book_id)
+
     document.getElementById('delete_book').addEventListener('click', () => {fetch.deleteBookById(book_id)});
     document.getElementById('edit_book').addEventListener('click', () => {openModal(book_id, "update-book-container")});
     document.getElementById('update-book-button').addEventListener('click', () => {fetch.updateBookById(book_id)});
@@ -41,7 +37,6 @@ function fillBookModal(book_id, title, author, editor, publisher, publishing_dat
 
 async function fillUpdateBookModal(book_id) {
     const book = await fetch.fetchBookById(book_id);
-    console.log(book);
 
     document.getElementById('update_title').placeholder = book.title;
     document.getElementById('update_authors').placeholder = (book.authors === null) ? "" : book.authors;
@@ -57,15 +52,31 @@ async function fillUpdateBookModal(book_id) {
     document.getElementById('update_comments').placeholder = (book.comment === null) ? "" : book.comment;
 }
 
+function resetAddBookForm() {
+    document.getElementById('title').value = "";
+    document.getElementById('authors').value = "";
+    document.getElementById('editor').value = "";
+    document.getElementById('publisher').value = "";
+    document.getElementById('publishing_date').value = "";
+    document.getElementById('isbn').value = "";
+    document.getElementById('page_count').value = "";
+    document.getElementById('house').value = "";
+    document.getElementById('room').value = "";
+    document.getElementById('bookcase').value = "";
+    document.getElementById('shelf').value = "";
+    document.getElementById('comments').value = "";
+}
+
 const openModal = function (ID, container_name) {
     const modal_container = document.getElementById(container_name);
-    console.log("Button was pressed")
-    console.log(modal_container)
     if(container_name === "book_detail_modal"){
         fetch.fetchBookById(ID);
     }
     if(container_name === "update-book-container"){
         fillUpdateBookModal(ID);
+    }
+    if(container_name === "add-book-container"){
+        resetAddBookForm();
     }
     modal_container.classList.remove('hidden');
     overlay.classList.remove('hidden');

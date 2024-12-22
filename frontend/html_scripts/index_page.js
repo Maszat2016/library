@@ -1,9 +1,12 @@
 import fetch from "./fetch.js";
 import modal from "./modal_controller.js";
+import user from "./user_access.js";
 
 document.addEventListener("DOMContentLoaded", () => {fetch.fillBookContainer()});
 document.getElementById("apply-filter")
     .addEventListener("click", () => {fetch.fillBookContainer()});
+document.getElementById("reset-filter")
+    .addEventListener("click", () => {fetch.resetFilters()});
 
 
 document.getElementById("close-modal")
@@ -20,3 +23,7 @@ document.getElementById("add-book-button")
 
 document.getElementById("create-book-button")
     .addEventListener("click", () => {fetch.createBook()});
+
+document.addEventListener("DOMContentLoaded", (event) => {user.showButtons()})
+
+document.getElementById("logoutButton").addEventListener('click', () => {user.logOut()})

@@ -106,7 +106,7 @@ export class DataAccessLayer {
         const users : User[] = [];
 
         const sql: string = `
-            SELECT user_id,username,password,isAdmin
+            SELECT ID,username,password,isAdmin
             FROM Library.Users`
         ;
 
@@ -114,7 +114,7 @@ export class DataAccessLayer {
 
         rows.forEach((row) => {
             let user: User = {
-                user_id: row.user_id,
+                user_id: row.ID,
                 username: row.username,
                 password: row.password,
                 isAdmin: row.isAdmin
@@ -134,7 +134,6 @@ export class DataAccessLayer {
             `;
 
             const [result]: [mysql.ResultSetHeader, any] = await this._connection.query(sql, [username, password, isAdmin]);
-
             return {
                 user_id: result.insertId,
                 username,
@@ -149,8 +148,8 @@ export class DataAccessLayer {
     async getUserById(id: number) : Promise<User | null>{
         try{
             const sql : string = `
-             SELECT user_id,username,email,password,isAdmin FROM Library.Users
-             WHERE user_id = ?;
+             SELECT ID,username,password,isAdmin FROM Library.Users
+             WHERE ID = ?;
            `;
 
             const [rows,fields] =  await this._connection.query<mysql.RowDataPacket[]>(sql,[id]);
@@ -161,7 +160,7 @@ export class DataAccessLayer {
             else{
                 let row = rows[0];
                 let user : User = {
-                    user_id : row.user_id,
+                    user_id : row.ID,
                     username : row.username,
                     password : row.password,
                     isAdmin : row.isAdmin
@@ -205,7 +204,7 @@ export class DataAccessLayer {
         try{
             const sql : string = `
             DELETE FROM Library.Users
-            WHERE user_id = ?
+            WHERE ID = ?
            `;
 
             await this._connection.query(sql,[id]);
@@ -917,7 +916,6 @@ export class DataAccessLayer {
     async addBook(title: string, authors: string[], editor: string, publisher: string, publishing_date: number, isbn: string,
                   page_count: number, house: string, room: string, bookcase: number, shelf: number, comment: string) {
         try{
-            console.log(title, authors, editor, publisher, publishing_date, isbn, page_count, house, room, bookcase, shelf, comment);
             await this.addPlace(house, room, bookcase, shelf);
             const place_id = await this.getPlaceId(house, room, bookcase, shelf);
 
@@ -933,10 +931,8 @@ export class DataAccessLayer {
             if(authors != null) {
                 if (authors.length > 0) {
                     for (const author of authors) {
-                        console.log(author);
                         await this.addAuthor(author);
                         const author_id = await this.getAuthorId(author);
-                        console.log(book_id, author_id);
                         await this.addBookAuthor(book_id, author_id);
                     }
                 }

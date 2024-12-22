@@ -10,6 +10,23 @@ body {
     overflow-x: hidden;
     padding: 50px 0 0;
 }
+
+.header {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    right: 25%;
+    margin-top: -50px;
+    margin-left: -50px;
+    font-size: 50px;
+    color: white;
+    background-color: #276c38;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
 /* Menu */
 .menu {
     background-color: #48a75c; /* Muted green to complement beige */
@@ -78,6 +95,24 @@ body {
 .login-form-group input:focus {
     border-color: #48a75c; /* Green border on focus */
     outline: none;
+}
+
+.logout {
+    display: block;
+    padding: 10px;
+    background-color: #276c38; /* Slightly darker green for Register button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.logout:hover {
+    background-color: #276c38; /* Darker green on hover */
 }
 
 .login-button {
@@ -160,7 +195,7 @@ body {
 .registration-button {
     width: 100%;
     padding: 10px;
-    background-color: #48a75c; /* Green button */
+    background-color: #4e8c44; /* Green button */
     color: white;
     border: none;
     border-radius: 4px;
