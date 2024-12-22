@@ -421,7 +421,7 @@ export class DataAccessLayer {
                 ON DUPLICATE KEY UPDATE name = ?;
             `;
 
-            await this._connection.query(sql,[name]);
+            await this._connection.query(sql,[name, name]);
         }
         catch(e){
             console.log(e);
@@ -488,7 +488,7 @@ export class DataAccessLayer {
         try{
             const sql : string = `
                 INSERT INTO Library.Places (house, room, bookcase, shelf)
-                SELECT * FROM (SELECT ?, ?, ?, ?) AS tmp
+                SELECT ?, ?, ?, ?
                 WHERE NOT EXISTS (
                     SELECT 1 
                     FROM Library.Places 
@@ -564,15 +564,15 @@ export class DataAccessLayer {
     async addBookEditor(book_id: number, editor_id: number){
         try{
             const sql : string = `
-                INSERT INTO Library.BookAuthors (book_id, editor_id)
+                INSERT INTO Library.BookEditors (book_id, editor_id)
                 SELECT * FROM (SELECT ? AS c1, ? AS c2) AS tmp
                 WHERE NOT EXISTS (
                     SELECT 1 
-                    FROM Library.BookAuthors 
+                    FROM Library.BookEditors 
                     WHERE book_id = ? AND editor_id = ?);
             `
 
-            await this._connection.query(sql,[book_id, editor_id]);
+            await this._connection.query(sql,[book_id, editor_id, book_id, editor_id]);
         }
         catch(e){
             console.log(e);
@@ -759,40 +759,43 @@ export class DataAccessLayer {
             LEFT JOIN Library.BookEditors be ON b.book_id = be.book_id
             LEFT JOIN Library.Editors e ON be.editor_id = e.editor_id
             LEFT JOIN Library.Places p ON b.place_id = p.place_id
-            WHERE 1=1
         `
 
         const params: Array<string> = [];
+        if(filter.title != null || filter.publisher != null || filter.author != null || filter.editor != null
+            || filter.house != null || filter.page_count != null || filter.comment != null){
+            sql += `WHERE 1=2 `;
+        }
 
         if(filter.title != null){
-            sql += `AND LOWER(b.title) LIKE ?`;
+            sql += `OR LOWER(b.title) LIKE ?`;
             params.push(`%${filter.title.toLowerCase()}%`);
         }
         if(filter.publisher != null){
-            sql += `AND LOWER(b.publisher) LIKE ?`;
+            sql += `OR LOWER(b.publisher) LIKE ?`;
             params.push(`%${filter.publisher.toLowerCase()}%`);
         }
         if(filter.author != null){
-            sql += `AND LOWER(a.name) LIKE ?`;
+            sql += `OR LOWER(a.name) LIKE ?`;
             params.push(`%${filter.author.toLowerCase()}%`);
         }
 
         if(filter.editor != null){
-            sql += `AND LOWER(e.name) LIKE ?`;
+            sql += `OR LOWER(e.name) LIKE ?`;
             params.push(`%${filter.editor.toLowerCase()}%`);
         }
 
         if(filter.house != null){
-            sql += `AND LOWER(p.house) LIKE ?`;
+            sql += `OR LOWER(p.house) LIKE ?`;
             params.push(`%${filter.house.toLowerCase()}%`);
         }
 
         if(filter.page_count != null){
-            sql += `AND b.page_count <= ?`;
+            sql += `OR b.page_count <= ?`;
             params.push(filter.page_count.toString());
         }
         if(filter.comment != null){
-            sql += `AND LOWER(b.comment) LIKE ?`;
+            sql += `OR LOWER(b.comment) LIKE ?`;
             params.push(`%${filter.comment.toLowerCase()}%`);
         }
 
@@ -834,6 +837,7 @@ export class DataAccessLayer {
         try{
             const sql: string = `
                 SELECT 
+                    b.book_id,
                     b.title,
                     GROUP_CONCAT(DISTINCT a.name SEPARATOR ', ') AS authors,
                     e.name AS editor,
@@ -913,6 +917,7 @@ export class DataAccessLayer {
     async addBook(title: string, authors: string[], editor: string, publisher: string, publishing_date: number, isbn: string,
                   page_count: number, house: string, room: string, bookcase: number, shelf: number, comment: string) {
         try{
+            console.log(title, authors, editor, publisher, publishing_date, isbn, page_count, house, room, bookcase, shelf, comment);
             await this.addPlace(house, room, bookcase, shelf);
             const place_id = await this.getPlaceId(house, room, bookcase, shelf);
 
@@ -925,13 +930,15 @@ export class DataAccessLayer {
 
             const book_id = await this.getBookId(title, publisher, publishing_date, isbn, page_count, place_id);
 
-            if(authors.length > 0){
-                for (const author of authors) {
-                    console.log(author);
-                    await this.addAuthor(author);
-                    const author_id = await this.getAuthorId(author);
-                    console.log(book_id, author_id);
-                    await this.addBookAuthor(book_id, author_id);
+            if(authors != null) {
+                if (authors.length > 0) {
+                    for (const author of authors) {
+                        console.log(author);
+                        await this.addAuthor(author);
+                        const author_id = await this.getAuthorId(author);
+                        console.log(book_id, author_id);
+                        await this.addBookAuthor(book_id, author_id);
+                    }
                 }
             }
 

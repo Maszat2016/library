@@ -80,7 +80,7 @@ const getBooksWithEditor = async (req, res) => {
 
 const addBook = async (req, res) => {
     const title = req.body.title;
-    const authors = req.body.authors.split(',');
+    const authors = (req.body.authors == null) ? null :  req.body.authors.split(',');
     const editor = req.body.editor;
     const publisher = req.body.publisher;
     const publishing_date = req.body.publishing_date;
@@ -91,6 +91,8 @@ const addBook = async (req, res) => {
     const bookcase = req.body.bookcase;
     const shelf = req.body.shelf;
     const comment = req.body.comment;
+
+    console.log(title, authors, editor, publisher, publishing_date, isbn, page_count, house, room, bookcase, shelf, comment);
 
     try {
         await dataAccessLayer.addBook(title, authors, editor, publisher, publishing_date, isbn, page_count, house, room, bookcase, shelf, comment);

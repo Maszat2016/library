@@ -31,7 +31,6 @@ body {
     text-decoration: none;
     font-size: 16px;
     margin-left: 20px;
-    width: 8%;
     white-space: nowrap;
 }
 
@@ -174,7 +173,7 @@ body {
 }
 
 /* Login link */
-.login-link {
+.login-link{
     display: block;
     padding: 10px;
     background-color: #4e8c44; /* Muted green */
@@ -192,12 +191,29 @@ body {
     background-color: #3cb257; /* Darker green on hover */
 }
 
+.add-book-link{
+    display: block;
+    padding: 10px;
+    background-color: #4e8c44; /* Muted green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.add-book-link:hover {
+    background-color: #48a75c; /* Darker green on hover */
+}
+
 /* Main Book Container Styling */
-.book-container {
+.book-container{
     padding: 20px;
     text-align: center;
     width: 80%;
-    margin-top: 50px;
     margin-bottom: 100px;
 }
 
@@ -223,6 +239,21 @@ body {
     font-size: 18px;
     color: white;
     margin-bottom: 10px; /* Adds space between each piece of information */
+}
+
+.book-author:before{
+    content: "Szerző(k): ";
+    font-weight: bold;
+}
+
+.book-editor:before{
+    content: "Szerkesztő: ";
+    font-weight: bold;
+}
+
+.book-page:before{
+    content: "Oldalszám: ";
+    font-weight: bold;
 }
 
 .book-button {
@@ -255,5 +286,337 @@ body {
 }
 
 .back-button:hover {
-    background-color: #48a75c; /* Darker green on hover */
+    background-color: #276c38; /* Darker green on hover */
+}
+
+/*Filter*/
+.filter-container {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    background-color: #48a75c;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    color: white;
+}
+
+.filter-container h2 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end; /* Aligns fields and button */
+    justify-content: space-between; /* Spreads items evenly */
+    gap: 10%; /* Adds spacing between fields */
+}
+
+.filter-group {
+    flex: 1; /* Ensures all fields take equal space */
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.filter-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #218838;
+    color: white;
+}
+
+.filter-group input::placeholder {
+    color: #e0e0e0;
+}
+
+.filter-button {
+    background-color: white;
+    color: #28a745;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevents the button from shrinking */
+}
+
+.filter-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 70%;
+    min-width: 70%;
+    background-color: rgba(245, 245, 220, 0.95); /* Beige background */
+    color: #333; /* Darker text for contrast */
+    padding: 6em;
+    border-radius: 5px;
+    box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.show-modal {
+    font-size: 1.75rem;
+    font-weight: 600;
+    padding: 1.5rem 3rem;
+    margin: 4rem 2rem;
+    border: none;
+    background-color: #f8f9fa; /* Light beige/neutral background */
+    color: #6c757d; /* Muted dark text */
+    border-radius: 10rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.show-modal:hover {
+    background-color: #c2b280; /* Muted darker beige for hover */
+    color: white; /* White text on hover */
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 1.75rem;
+    color: #333; /* Dark text color */
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.close-modal:hover {
+    background-color: #800000; /* Maroon for hover */
+    color: white; /* White text on hover */
+}
+
+.hidden {
+    display: none;
+}
+
+/* Modal title */
+.modal-book_title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3cb257; /* Deep blue text color */
+    margin-bottom: 1em;
+}
+
+/* Close button styling */
+.close-modal {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: #333;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: black;
+    background-color: transparent;
+}
+
+/* Close button hover effect */
+.close-modal:hover {
+    background-color: #f44336; /* Red for the close button hover */
+    color: white;
+}
+
+/* Container for each piece of book info */
+.book-details div {
+    margin-bottom: 1.5em;
+}
+
+/* Labels for book information */
+.book-details strong {
+    font-weight: bold;
+    color: #007bff; /* Blue color for labels */
+}
+
+/* Modal data styling */
+.data {
+    font-size: 1rem;
+    color: #333;
+    margin-left: 10px;
+    font-style: italic; /* Italicize the data for differentiation */
+}
+
+/* Place container layout */
+.place div {
+    margin-left: 20px;
+    font-size: 0.9rem;
+}
+
+/* Modal display button */
+.book-button {
+    background-color: #28a745; /* Green background for buttons */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Hover effect for button */
+.book-button:hover {
+    background-color: #218838; /* Darker green for hover */
+}
+
+.data {
+    font-size: larger;
+}
+
+.modal-authors-data:before {
+    content: "Szerző(k): ";
+    font-weight: bold;
+}
+.modal-title-data:before {
+    content: "Cím: ";
+    font-weight: bold;
+}
+.modal-editor-data:before {
+    content: "Szerkesztő: ";
+    font-weight: bold;
+}
+.modal-publisher-data:before {
+    content: "Kiadó: ";
+    font-weight: bold;
+}
+.modal-publishing_date-data:before {
+    content: "Kiadás éve: ";
+    font-weight: bold;
+}
+.modal-isbn-data:before {
+    content: "ISBN-kód: ";
+    font-weight: bold;
+}
+.modal-page_count-data:before {
+    content: "Oldalszám: ";
+    font-weight: bold;
+}
+.modal-house-data:before {
+    content: "Ház: ";
+    font-weight: bold;
+}
+.modal-room-data:before {
+    content: "Szoba: ";
+    font-weight: bold;
+}
+.modal-bookcase-data:before {
+    content: "Könyvespolc: ";
+    font-weight: bold;
+}
+.modal-shelf-data:before {
+    content: "Polc: ";
+    font-weight: bold;
+}
+.modal-comment-data:before {
+    content: "Megjegyzés: ";
+    font-weight: bold;
+}
+.modal-place-data:before {
+    content: "Hely: ";
+    font-weight: bold;
+}
+
+.delete_book {
+    background-color: #276c38;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-top: 10px;
+    width: 25%;
+    white-space: nowrap;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+.delete_book:hover {
+    background-color: #28a745;
+}
+
+.edit_book {
+    background-color: #276c38;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-top: 10px;
+    width: 25%;
+    white-space: nowrap;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+.edit_book:hover {
+    background-color: #28a745;
+}
+
+.add-book-form-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #276c38; /* Blue text for the title */
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+    padding-right: 1em;
+    width: 20%;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #007bff; /* Blue border for focus */
+    outline: none;
+}
+
+.form-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-button:hover {
+    background-color: #218838; /* Darker green on hover */
 }
